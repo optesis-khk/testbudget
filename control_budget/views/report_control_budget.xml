@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_control_budget">
+        <div class="o_control_budgets_page">
+            <t t-call="control_budget.report_buttons"/>
+            <t t-call="control_budget.report_control_budget_base"/>
+        </div>
+    </template>
+</odoo>

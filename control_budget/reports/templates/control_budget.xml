@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_control_budget_qweb">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="control_budget.internal_layout">
+                    <t t-call="control_budget.report_control_budget_base"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_control_budget_base">
+        <!-- Saved flag fields into variables, used to define columns display -->
+        <t t-set="show_analytic_tags" t-value="o.show_analytic_tags"/>
+        <t t-set="show_cost_center" t-value="o.show_cost_center"/>
+        <t t-set="foreign_currency" t-value="o.foreign_currency"/>
+        <!-- Defines global variables used by internal layout -->
+        <t t-set="title">Controle Budgétaire - <t t-raw="o.company_id.name"/> - <t t-raw="o.company_id.currency_id.name"/></t>
+        <t t-set="company_name" t-value="o.company_id.name"/>
+        <div class="page">
+            <div class="row">
+                <h4 class="mt0" t-esc="title or 'Odoo Report'" style="text-align: center;"/>
+            </div>
+            <!-- Display filters -->
+            <t t-call="control_budget.report_control_budget_filters"/>
+            <t t-foreach="o.account_ids" t-as="account">
+                <div class="page_break">
+                    <!-- Display account header -->
+                    <div class="act_as_table list_table" style="margin-top: 10px;"/>
+                    <div class="act_as_caption account_title"
+                         style="width: 100%">
+                         <span t-field="account.general_budget_id.name"/>
+                    </div>
+
+                        <t t-call="control_budget.report_control_budget_lines">
+                            <t t-set="account_or_partner_object" t-value="account"/>
+                        </t>
+
+
+                    <!-- Display account footer -->
+                    <t t-call="control_budget.report_control_budget_ending_cumul">
+                        <t t-set="account_or_partner_object" t-value="account"/>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <template id="control_budget.report_control_budget_filters">
+        <div class="act_as_table data_table" style="width: 100%;">
+            <div class="act_as_row labels">
+                <div class="act_as_cell">Période</div>
+            </div>
+            <div class="act_as_row">
+                <div class="act_as_cell">
+                    Du: <span t-field="o.date_from"/> Au: <span t-field="o.date_to"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="control_budget.report_control_budget_lines">
+        <div class="act_as_table data_table" style="width: 100%;">
+            <!-- Display table headers for lines -->
+            <div class="act_as_thead">
+                <div class="act_as_row labels">
+                    <!--## date-->
+                    <div class="act_as_cell first_column" style="width: 3.51%;">Date</div>
+                    <!--## move-->
+                    <div class="act_as_cell" style="width: 8.03%">Référence</div>
+                    <!--## journal-->
+                    <div class="act_as_cell" style="width: 4.13%;">Article</div>
+                    <!--## account code-->
+                    <div class="act_as_cell" style="width: 4.75%;">Compte</div>
+                    <!--## account code-->
+                    <div class="act_as_cell" style="width: 8.89%;">Compte Analitique</div>
+                    <!--## partner-->
+                    <div class="act_as_cell" style="width: 12.01%;">Fournisseur</div>
+                    <!--## debit-->
+                    <div class="act_as_cell amount" style="width: 6.02%;">Montant Prévu</div>
+                    <!--## credit-->
+                    <div class="act_as_cell amount" style="width: 6.02%;">Montant engagé</div>
+                    <!--## balance cumulated-->
+                    <div class="act_as_cell amount" style="width: 6.02%;">Montant Disponible</div>
+                </div>
+            </div>
+
+
+            <!-- Display each lines -->
+            <t t-foreach="account_or_partner_object.move_line_ids" t-as="line">
+                <!-- # lines or centralized lines -->
+                <div class="act_as_row lines">
+                    <!--## date-->
+                    <div class="act_as_cell left">
+                        <span>
+                                <t t-esc="line.date" t-options="{'widget': 'date'}"/>
+                        </span>
+                    </div>
+
+                    <div class="act_as_cell left">
+                        <span>
+                                <t t-esc="line.ref"/>
+                        </span>
+                    </div>
+
+                    <div class="act_as_cell left">
+                        <span>
+                                <t t-esc="line.product_id.name"/>
+                        </span>
+                    </div>
+
+                    <div class="act_as_cell left">
+                        <span>
+                                <t t-esc="line.general_account_id.code"/>
+                        </span>
+                    </div>
+
+                    <div class="act_as_cell left">
+                        <span>
+                                <t t-esc="line.account_id.name"/>
+                        </span>
+                    </div>
+
+                    <div class="act_as_cell left">
+                        <span>
+                                <t t-esc="line.partner_id.name"/>
+                        </span>
+                    </div>
+
+                    <div class="act_as_cell left">
+                        <span>
+                                <t t-esc="line.planned_amount"/>
+                        </span>
+                    </div>
+
+                    <div class="act_as_cell left">
+                        <span>
+                                <t t-esc="line.amount"/>
+                        </span>
+                    </div>
+
+                    <div class="act_as_cell left">
+                        <span>
+                                <t t-esc="line.available_amount"/>
+                        </span>
+                    </div>
+
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <template id="control_budget.report_control_budget_ending_cumul">
+        <!-- Display ending balance line for account or partner -->
+        <div class="act_as_table list_table" style="width: 100%;">
+            <div class="act_as_row labels" style="font-weight: bold;">
+
+                <div class="act_as_cell first_column" style="width: 40%;">
+                     <span t-field="account_or_partner_object.general_budget_id.name"/>
+                </div>
+
+                <div class="act_as_cell right"   style="width: 24%;">Totale</div>
+
+                <div class="act_as_cell amount" style="width: 12%;">
+                    <span t-field="account_or_partner_object.planned_amount" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                </div>
+
+                <div class="act_as_cell amount" style="width: 12%;">
+                    <span t-field="account_or_partner_object.engage_amount" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                </div>
+
+                <div class="act_as_cell amount" style="width: 12%;">
+                    <span t-field="account_or_partner_object.available_amount" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

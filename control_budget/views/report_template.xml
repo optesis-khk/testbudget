@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <template id="control_budget_assets_backend"  name="control_budget assets" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+      <link href="/control_budget/static/src/css/report.css" rel="stylesheet"/>
+      <script type="text/javascript" src="/control_budget/static/src/js/control_budget_backend.js"/>
+      <script type="text/javascript" src="/control_budget/static/src/js/control_budget_widgets.js"/>
+    </xpath>
+  </template>
+
+  <template id="report_buttons">
+    <div class="button_row">
+      <button class="o_control_budgets_print btn btn-sm oe_button"><span class="fa fa-print"/> Print</button>
+      <button class="o_control_budgets_export btn btn-sm oe_button"><span class="fa fa-download"/> Export</button>
+    </div>
+  </template>
+
+  <record id="action_report_control_budget" model="ir.actions.client">
+      <field name="name">Control Budget</field>
+      <field name="tag">control_budget_backend</field>
+      <field name="context" eval="{'active_model': 'report_control_budget'}" />
+  </record>
+
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- DEBUT BILAN COMPTABLE -->
+    <record id="control_budget_report_post" model="crossovered.budget.lines">
+        <field name="name">Suivi Budgétaire</field>
+        <field name='parent_id' ref='control_budget.menu_report_suivi'/>
+    </record>
+
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- <record id="action_report_crossovered_budget_xlsx" model="ir.actions.report">
+        <field name="name">Crossovered Budget XLSX</field>
+        <field name="model">report_control_budget</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_name">c_b.report_control_budget_xlsx</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_file">report_control_budget</field>
+    </record> -->
+
+    <report
+      id="action_report_control_budget_qweb"
+      model="report_control_budget"
+      string="Suivis Budgetaire"
+      report_type="qweb-pdf"
+      name="control_budget.report_control_budget_qweb"
+      file="control_budget.report_control_budget_qweb"
+      />
+
+</odoo>
